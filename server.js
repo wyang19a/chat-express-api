@@ -2,6 +2,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const morgan = require('morgan')
 
 // require route files
 const exampleRoutes = require('./app/routes/example_routes')
@@ -29,7 +30,8 @@ const clientDevPort = 7165
 // use createIndex instead of deprecated ensureIndex
 mongoose.connect(db, {
   useNewUrlParser: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useUnifiedTopology: true
 })
 
 // instantiate express application object
@@ -38,6 +40,9 @@ const app = express()
 // set CORS headers on response from this API using the `cors` NPM package
 // `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || `http://localhost:${clientDevPort}` }))
+
+// Logger
+app.use(morgan('dev'))
 
 // define port for API to run on
 const port = process.env.PORT || serverDevPort
@@ -71,7 +76,7 @@ app.use(errorHandler)
 
 // run API on designated port (4741 in this case)
 app.listen(port, () => {
-  console.log('listening on port ' + port)
+  console.log('Listening on port ' + port)
 })
 
 // needed for testing
