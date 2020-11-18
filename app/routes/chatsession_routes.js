@@ -59,7 +59,7 @@ router.get('/sessions/:id', requireToken, (req, res, next) => {
 // POST /sessions
 router.post('/sessions', requireToken, (req, res, next) => {
   // set owner of new chatsession to be current user
-  req.body.chatsession.owner = req.user.id
+  req.body.chatsession.owner = req.user._id
 
   ChatSession.create(req.body.chatsession)
     // respond to succesful `create` with status 201 and JSON of new "chatsession"
