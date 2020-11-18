@@ -19,4 +19,4 @@ const chatSessionSchema = new mongoose.Schema(
   }
 )
 
-module.exports = mongoose.model('ChatRoom', chatSessionSchema)
+module.exports = mongoose.model('ChatSession', chatSessionSchema)
