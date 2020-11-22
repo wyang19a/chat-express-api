@@ -15,6 +15,10 @@ const errorHandler = require('./lib/error_handler')
 const replaceToken = require('./lib/replace_token')
 const requestLogger = require('./lib/request_logger')
 
+// require socket.io and http
+const socket = require('socket.io')
+const http = require('http')
+
 // require database configuration logic
 // `db` will be the actual Mongo URI as a string
 const db = require('./config/db')
@@ -38,6 +42,14 @@ mongoose.connect(db, {
 
 // instantiate express application object
 const app = express()
+
+// instantiate socket.io
+const server = http.createServer(app)
+const io = socket(server, {
+  cors: {
+    origin: '*',
+  }
+})
 
 // set CORS headers on response from this API using the `cors` NPM package
 // `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
@@ -78,8 +90,12 @@ app.use(messageRoutes)
 // passed any error messages from them
 app.use(errorHandler)
 
+io.on('connection', socket => {
+  console.log('new connection made')
+})
+
 // run API on designated port (4741 in this case)
-app.listen(port, () => {
+server.listen(port, () => {
   console.log('Listening on port ' + port)
 })
 
