@@ -130,6 +130,20 @@ router.patch('/change-password', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// TODO: Add friends functionality
+// PATCH Add friend
+// router.patch('/add-friend', requireToken, (req, res, next) => {
+//   let user
+//   User.findById(req.user.id)
+//     .then(record => { user = record })
+//     .then(friendId => {
+//       user.friends.push(friendId)
+//       return user.save()
+//     })
+//     .then(() => res.sendStatus(204))
+//     .catch(next)
+// })
+
 router.delete('/sign-out', requireToken, (req, res, next) => {
   // create a new random token for the user, invalidating the current one
   req.user.token = crypto.randomBytes(16)

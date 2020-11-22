@@ -33,13 +33,13 @@ router.post('/messages', requireToken, (req, res, next) => {
   // set owner of new comment to be current user
   req.body.message.owner = req.user.id
   // use the chatRoomId provided by the frontend and search for the ChatRoom
-  ChatSession.findById(req.body.message.chatSessionId)
-    .then(chatsession => {
-      chatsession.messages.push(req.body.message)
-      return chatsession.save()
+  ChatSession.findById(req.body.message.sessionId)
+    .then(session => {
+      session.messages.push(req.body.message)
+      return session.save()
     })
-    .then(chatsession => {
-      res.status(201).json({ chatsession: chatsession.toObject() })
+    .then(session => {
+      res.status(201).json({ session: session.toObject() })
     })
     .catch(next)
 })
