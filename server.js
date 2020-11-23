@@ -47,7 +47,7 @@ const app = express()
 const server = http.createServer(app)
 const io = socket(server, {
   cors: {
-    origin: '*',
+    origin: '*'
   }
 })
 
@@ -91,7 +91,17 @@ app.use(messageRoutes)
 app.use(errorHandler)
 
 io.on('connection', socket => {
-  console.log('new connection made')
+  // console.log('new connection made')
+
+  socket.on('send chat message', room => {
+    // console.log('send chat message recieved')
+    socket.broadcast.to(room).emit('new chat message')
+  })
+
+  socket.on('join chatroom', room => {
+    socket.join(room)
+    // socket.broadcast.to(room).emit('join success')
+  })
 })
 
 // run API on designated port (4741 in this case)
