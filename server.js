@@ -92,15 +92,27 @@ app.use(errorHandler)
 
 io.on('connection', socket => {
   // console.log('new connection made')
-
+  // const totalCount = io.of('/').sockets.size
+  // listen for 'join chatroom', subscribe client to 'room'
+  socket.on('join chatsession', room => {
+    // const clientsInRoom = io.nsps['/'].adapter.rooms[room]
+    // console.log(totalCount)
+    socket.join(room)
+    socket.broadcast.to(room).emit('join success')
+    // console.log(`new user joined ${room}`)
+  })
+  // listen for 'send chat message', broadcast to room 'new chat message'
   socket.on('send chat message', room => {
     // console.log('send chat message recieved')
     socket.broadcast.to(room).emit('new chat message')
   })
 
-  socket.on('join chatroom', room => {
-    socket.join(room)
-    // socket.broadcast.to(room).emit('join success')
+  socket.on('chatsession deleted', () => {
+    io.emit('update session list for deleted')
+  })
+
+  socket.on('new chatsession created', () => {
+    io.emit('update session list for created')
   })
 })
 
