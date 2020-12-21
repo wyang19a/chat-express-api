@@ -94,26 +94,32 @@ io.on('connection', socket => {
   // console.log('new connection made')
   // const totalCount = io.of('/').sockets.size
   // listen for 'join chatroom', subscribe client to 'room'
-  socket.on('join chatsession', room => {
+  socket.on('join chatsession', id => {
     // const clientsInRoom = io.nsps['/'].adapter.rooms[room]
     // console.log(totalCount)
-    socket.join(room)
-    socket.broadcast.to(room).emit('join success')
+    socket.join(id)
+    socket.broadcast.to(id).emit('join success')
     // console.log(`new user joined ${room}`)
   })
   // listen for 'send chat message', broadcast to room 'new chat message'
-  socket.on('send chat message', room => {
+  socket.on('send chat message', id => {
     // console.log('send chat message recieved')
-    socket.broadcast.to(room).emit('new chat message')
+    socket.broadcast.to(id).emit('new chat message')
   })
 
   socket.on('chatsession deleted', () => {
-    io.emit('update session list for deleted')
+    io.emit('update sessions')
   })
 
   socket.on('new chatsession created', () => {
-    io.emit('update session list for created')
+    io.emit('update sessions')
   })
+
+  socket.on('exit', id => {
+    socket.to(id).emit('user left')
+    socket.leave(id)
+  });
+
 })
 
 // run API on designated port (4741 in this case)
